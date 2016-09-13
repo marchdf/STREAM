@@ -10,6 +10,11 @@ work. Also added make commands for the Xeon Phi Knights Corner.
 Please read my detailed notes how to compile/run on Peregrine as well
 as some test results.
 
+To compile/execute the notes (markdown/Pweave):
+```
+pweave -i markdown -f md2html notes.mdw
+```
+
 ================================================================================
 
 
