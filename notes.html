@@ -1,0 +1,876 @@
+
+<!DOCTYPE html>
+<HTML>
+<HEAD>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/LaTeX", "output/HTML-CSS"],
+    "HTML-CSS": { availableFonts: ["TeX"] }
+    });
+</script>
+
+<script type="text/javascript"
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<style>
+
+@font-face {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Raleway Light'), local('Raleway-Light'), url(http://fonts.gstatic.com/s/raleway/v9/-_Ctzj9b56b8RgXW8FArifk_vArhqVIZ0nv9q090hN8.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Raleway'), url(http://fonts.gstatic.com/s/raleway/v9/0dTEPzkLWceF7z0koJaX1A.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Raleway SemiBold'), local('Raleway-SemiBold'), url(http://fonts.gstatic.com/s/raleway/v9/xkvoNo9fC8O2RDydKj12b_k_vArhqVIZ0nv9q090hN8.woff2) format('woff2');
+}
+html {
+  font-family: sans-serif; /* 1 */
+  -ms-text-size-adjust: 100%; /* 2 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+}
+body {
+  margin: 0;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+audio,
+canvas,
+progress,
+video {
+  display: inline-block; /* 1 */
+  vertical-align: baseline; /* 2 */
+}
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+[hidden],
+template {
+  display: none;
+}
+a:active,
+a:hover {
+  outline: 0;
+}
+abbr[title] {
+  border-bottom: 1px dotted;
+}
+b,
+strong {
+  font-weight: bold;
+}
+dfn {
+  font-style: italic;
+}
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+mark {
+  background: #ff0;
+  color: #000;
+}
+small {
+  font-size: 80%;
+}
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+sup {
+  top: -0.5em;
+}
+sub {
+  bottom: -0.25em;
+}
+img {
+  border: 0;
+}
+svg:not(:root) {
+  overflow: hidden;
+}
+figure {
+  margin: 1em 40px;
+}
+hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+}
+pre {
+  overflow: auto;
+}
+code,
+kbd,
+pre,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+button,
+input,
+optgroup,
+select,
+textarea {
+  color: inherit; /* 1 */
+  font: inherit; /* 2 */
+  margin: 0; /* 3 */
+}
+button {
+  overflow: visible;
+}
+button,
+select {
+  text-transform: none;
+}
+button,
+html input[type="button"], /* 1 */
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button; /* 2 */
+  cursor: pointer; /* 3 */
+}
+button[disabled],
+html input[disabled] {
+  cursor: default;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+input {
+  line-height: normal;
+}
+input[type="checkbox"],
+input[type="radio"] {
+  box-sizing: border-box; /* 1 */
+  padding: 0; /* 2 */
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  height: auto;
+}
+input[type="search"] {
+  -webkit-appearance: textfield; /* 1 */
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box; /* 2 */
+  box-sizing: content-box;
+}
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em;
+}
+legend {
+  border: 0; /* 1 */
+  padding: 0; /* 2 */
+}
+textarea {
+  overflow: auto;
+}
+optgroup {
+  font-weight: bold;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+td,
+th {
+  padding: 0;
+}
+
+
+/*
+* Skeleton V2.0.4
+* Copyright 2014, Dave Gamache
+* www.getskeleton.com
+* Free to use under the MIT license.
+* http://www.opensource.org/licenses/mit-license.php
+* 12/29/2014
+*/
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box; }
+.column,
+.columns {
+  width: 100%;
+  float: left;
+  box-sizing: border-box; }
+@media (min-width: 400px) {
+  .container {
+    width: 85%;
+    padding: 0; }
+}
+@media (min-width: 550px) {
+  .container {
+    width: 80%; }
+  .column,
+  .columns {
+    margin-left: 4%; }
+  .column:first-child,
+  .columns:first-child {
+    margin-left: 0; }
+
+  .one.column,
+  .one.columns                    { width: 4.66666666667%; }
+  .two.columns                    { width: 13.3333333333%; }
+  .three.columns                  { width: 22%;            }
+  .four.columns                   { width: 30.6666666667%; }
+  .five.columns                   { width: 39.3333333333%; }
+  .six.columns                    { width: 48%;            }
+  .seven.columns                  { width: 56.6666666667%; }
+  .eight.columns                  { width: 65.3333333333%; }
+  .nine.columns                   { width: 74.0%;          }
+  .ten.columns                    { width: 82.6666666667%; }
+  .eleven.columns                 { width: 91.3333333333%; }
+  .twelve.columns                 { width: 100%; margin-left: 0; }
+
+  .one-third.column               { width: 30.6666666667%; }
+  .two-thirds.column              { width: 65.3333333333%; }
+
+  .one-half.column                { width: 48%; }
+
+  /* Offsets */
+  .offset-by-one.column,
+  .offset-by-one.columns          { margin-left: 8.66666666667%; }
+  .offset-by-two.column,
+  .offset-by-two.columns          { margin-left: 17.3333333333%; }
+  .offset-by-three.column,
+  .offset-by-three.columns        { margin-left: 26%;            }
+  .offset-by-four.column,
+  .offset-by-four.columns         { margin-left: 34.6666666667%; }
+  .offset-by-five.column,
+  .offset-by-five.columns         { margin-left: 43.3333333333%; }
+  .offset-by-six.column,
+  .offset-by-six.columns          { margin-left: 52%;            }
+  .offset-by-seven.column,
+  .offset-by-seven.columns        { margin-left: 60.6666666667%; }
+  .offset-by-eight.column,
+  .offset-by-eight.columns        { margin-left: 69.3333333333%; }
+  .offset-by-nine.column,
+  .offset-by-nine.columns         { margin-left: 78.0%;          }
+  .offset-by-ten.column,
+  .offset-by-ten.columns          { margin-left: 86.6666666667%; }
+  .offset-by-eleven.column,
+  .offset-by-eleven.columns       { margin-left: 95.3333333333%; }
+
+  .offset-by-one-third.column,
+  .offset-by-one-third.columns    { margin-left: 34.6666666667%; }
+  .offset-by-two-thirds.column,
+  .offset-by-two-thirds.columns   { margin-left: 69.3333333333%; }
+
+  .offset-by-one-half.column,
+  .offset-by-one-half.columns     { margin-left: 52%; }
+
+}
+html {
+  font-size: 62.5%; }
+body {
+  font-size: 1.5em; /* currently ems cause chrome bug misinterpreting rems on body element */
+  line-height: 1.6;
+  font-weight: 400;
+  font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #222; }
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: 2rem;
+  font-weight: 300; }
+h1 { font-size: 3.6rem; line-height: 1.2;  letter-spacing: -.1rem;}
+h2 { font-size: 3.4rem; line-height: 1.25; letter-spacing: -.1rem; }
+h3 { font-size: 3.2rem; line-height: 1.3;  letter-spacing: -.1rem; }
+h4 { font-size: 2.8rem; line-height: 1.35; letter-spacing: -.08rem; }
+h5 { font-size: 2.4rem; line-height: 1.5;  letter-spacing: -.05rem; }
+h6 { font-size: 1.5rem; line-height: 1.6;  letter-spacing: 0; }
+
+p {
+  margin-top: 0; }
+a {
+  color: #1EAEDB; }
+a:hover {
+  color: #0FA0CE; }
+.button,
+button,
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  display: inline-block;
+  height: 38px;
+  padding: 0 30px;
+  color: #555;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 38px;
+  letter-spacing: .1rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: transparent;
+  border-radius: 4px;
+  border: 1px solid #bbb;
+  cursor: pointer;
+  box-sizing: border-box; }
+.button:hover,
+button:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+input[type="button"]:hover,
+.button:focus,
+button:focus,
+input[type="submit"]:focus,
+input[type="reset"]:focus,
+input[type="button"]:focus {
+  color: #333;
+  border-color: #888;
+  outline: 0; }
+.button.button-primary,
+button.button-primary,
+input[type="submit"].button-primary,
+input[type="reset"].button-primary,
+input[type="button"].button-primary {
+  color: #FFF;
+  background-color: #33C3F0;
+  border-color: #33C3F0; }
+.button.button-primary:hover,
+button.button-primary:hover,
+input[type="submit"].button-primary:hover,
+input[type="reset"].button-primary:hover,
+input[type="button"].button-primary:hover,
+.button.button-primary:focus,
+button.button-primary:focus,
+input[type="submit"].button-primary:focus,
+input[type="reset"].button-primary:focus,
+input[type="button"].button-primary:focus {
+  color: #FFF;
+  background-color: #1EAEDB;
+  border-color: #1EAEDB; }
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea,
+select {
+  height: 38px;
+  padding: 6px 10px; /* The 6px vertically centers text on FF, ignored by Webkit */
+  background-color: #fff;
+  border: 1px solid #D1D1D1;
+  border-radius: 4px;
+  box-shadow: none;
+  box-sizing: border-box; }
+/* Removes awkward default styles on some inputs for iOS */
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none; }
+textarea {
+  min-height: 65px;
+  padding-top: 6px;
+  padding-bottom: 6px; }
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus {
+  border: 1px solid #33C3F0;
+  outline: 0; }
+label,
+legend {
+  display: block;
+  margin-bottom: .5rem;
+  font-weight: 600; }
+fieldset {
+  padding: 0;
+  border-width: 0; }
+input[type="checkbox"],
+input[type="radio"] {
+  display: inline; }
+label > .label-body {
+  display: inline-block;
+  margin-left: .5rem;
+  font-weight: normal; }
+ul {
+  list-style: circle inside; }
+ol {
+  list-style: decimal inside; }
+ol, ul {
+  padding-left: 0;
+  margin-top: 0; }
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+  margin: 1.5rem 0 1.5rem 3rem;
+  font-size: 90%; }
+li {
+  margin-bottom: 1rem; }
+th,
+td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #E1E1E1; }
+th:first-child,
+td:first-child {
+  padding-left: 0; }
+th:last-child,
+td:last-child {
+  padding-right: 0; }
+button,
+.button {
+  margin-bottom: 1rem; }
+input,
+textarea,
+select,
+fieldset {
+  margin-bottom: 1.5rem; }
+pre,
+blockquote,
+dl,
+figure,
+table,
+p,
+ul,
+ol,
+form {
+  margin-bottom: 2.5rem; }
+.u-full-width {
+  width: 100%;
+  box-sizing: border-box; }
+.u-max-full-width {
+  max-width: 100%;
+  box-sizing: border-box; }
+.u-pull-right {
+  float: right; }
+.u-pull-left {
+  float: left; }
+hr {
+  margin-top: 3rem;
+  margin-bottom: 3.5rem;
+  border-width: 0;
+  border-top: 1px solid #E1E1E1; }
+.container:after,
+.row:after,
+.u-cf {
+  content: "";
+  display: table;
+  clear: both; }
+
+pre {
+  display: block;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  color: #333;
+  word-break: break-all;
+  word-wrap: break-word;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+code,
+kbd,
+pre,
+samp {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+code {
+  padding: 2px 4px;
+  font-size: 90%;
+  color: #c7254e;
+  background-color: #f9f2f4;
+  border-radius: 4px;
+}
+
+@media (min-width: 400px) {}
+@media (min-width: 550px) {}
+@media (min-width: 750px) {}
+@media (min-width: 1000px) {}
+@media (min-width: 1200px) {}
+
+</style>
+
+<style>
+.hll { background-color: #ffffcc }
+.c { color: #408080; font-style: italic } /* Comment */
+.err { border: 1px solid #FF0000 } /* Error */
+.k { color: #008000; font-weight: bold } /* Keyword */
+.o { color: #666666 } /* Operator */
+.ch { color: #408080; font-style: italic } /* Comment.Hashbang */
+.cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.cp { color: #BC7A00 } /* Comment.Preproc */
+.cpf { color: #408080; font-style: italic } /* Comment.PreprocFile */
+.c1 { color: #408080; font-style: italic } /* Comment.Single */
+.cs { color: #408080; font-style: italic } /* Comment.Special */
+.gd { color: #A00000 } /* Generic.Deleted */
+.ge { font-style: italic } /* Generic.Emph */
+.gr { color: #FF0000 } /* Generic.Error */
+.gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.gi { color: #00A000 } /* Generic.Inserted */
+.go { color: #888888 } /* Generic.Output */
+.gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.gs { font-weight: bold } /* Generic.Strong */
+.gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.gt { color: #0044DD } /* Generic.Traceback */
+.kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.kp { color: #008000 } /* Keyword.Pseudo */
+.kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.kt { color: #B00040 } /* Keyword.Type */
+.m { color: #666666 } /* Literal.Number */
+.s { color: #BA2121 } /* Literal.String */
+.na { color: #7D9029 } /* Name.Attribute */
+.nb { color: #008000 } /* Name.Builtin */
+.nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.no { color: #880000 } /* Name.Constant */
+.nd { color: #AA22FF } /* Name.Decorator */
+.ni { color: #999999; font-weight: bold } /* Name.Entity */
+.ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.nf { color: #0000FF } /* Name.Function */
+.nl { color: #A0A000 } /* Name.Label */
+.nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.nt { color: #008000; font-weight: bold } /* Name.Tag */
+.nv { color: #19177C } /* Name.Variable */
+.ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.w { color: #bbbbbb } /* Text.Whitespace */
+.mb { color: #666666 } /* Literal.Number.Bin */
+.mf { color: #666666 } /* Literal.Number.Float */
+.mh { color: #666666 } /* Literal.Number.Hex */
+.mi { color: #666666 } /* Literal.Number.Integer */
+.mo { color: #666666 } /* Literal.Number.Oct */
+.sb { color: #BA2121 } /* Literal.String.Backtick */
+.sc { color: #BA2121 } /* Literal.String.Char */
+.sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.s2 { color: #BA2121 } /* Literal.String.Double */
+.se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.sh { color: #BA2121 } /* Literal.String.Heredoc */
+.si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.sx { color: #008000 } /* Literal.String.Other */
+.sr { color: #BB6688 } /* Literal.String.Regex */
+.s1 { color: #BA2121 } /* Literal.String.Single */
+.ss { color: #19177C } /* Literal.String.Symbol */
+.bp { color: #008000 } /* Name.Builtin.Pseudo */
+.vc { color: #19177C } /* Name.Variable.Class */
+.vg { color: #19177C } /* Name.Variable.Global */
+.vi { color: #19177C } /* Name.Variable.Instance */
+.il { color: #666666 } /* Literal.Number.Integer.Long */
+</style>
+
+<style>
+h1.title {margin-top : 20px}
+img {max-width : 100%}
+</style>
+
+</HEAD>
+<BODY>
+    <div class ="container">
+        <div class = "row">
+            <div class = "col-md-12 twelve columns">
+<H1 class = "title"> STREAM testing on Peregrine</H1>
+
+<p><strong>Author:</strong>  Marc T. Henry de Frahan <BR/>
+<strong>Date:</strong>  12th September 2016 <BR/></p>
+<h1>Setup environment</h1>
+<p>Assume you requested a Phi node which contains two Sandy bridge processors</p>
+<p><code>{bash}
+qsub -I -l nodes=1 -l walltime=02:30:00 -q phi -A optima;
+cat /proc/cpuinfo;</code></p>
+<p>And that you loaded the right modules</p>
+<p><code>{bash}
+module purge;
+module load comp-intel/16.0.2 python/3.3.3;
+module unload epel;</code></p>
+<p>And that you compiled the codes
+<code>{bash}
+make stream.icc
+make phi.stream.icc</code></p>
+<p>It should be noted that all these tests were run with: Array size =
+80000000 (elements), Offset = 0 (elements), memory per array = 610.4
+MiB (= 0.6 GiB), total memory required = 1831.1 MiB (= 1.8 GiB).</p>
+<h1>Setup python code</h1>
+<p>Import modules</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">import</span> <span class="nn">subprocess</span> <span class="kn">as</span> <span class="nn">sp</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+</pre></div>
+
+<p>Set up some important parameters</p>
+<div class="highlight"><pre><span></span><span class="n">host</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">()</span>
+<span class="n">rownames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Copy&#39;</span><span class="p">,</span> <span class="s1">&#39;Scale&#39;</span><span class="p">,</span> <span class="s1">&#39;Add&#39;</span><span class="p">,</span> <span class="s1">&#39;Triad&#39;</span><span class="p">]</span>
+</pre></div>
+
+<p>Define some functions</p>
+<div class="highlight"><pre><span></span><span class="c1">#================================================================================</span>
+<span class="k">def</span> <span class="nf">run_on_xeon</span><span class="p">(</span><span class="n">omp_threads</span><span class="p">,</span> <span class="n">kmp_affinity</span><span class="p">):</span>
+
+        <span class="c1"># Build the command</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;export OMP_NUM_THREADS={0:.0f}; </span><span class="se">\</span>
+<span class="s1">                export KMP_AFFINITY={1:s}; </span><span class="se">\</span>
+<span class="s1">./stream.omp.80M.20x.icc;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">omp_threads</span><span class="p">,</span><span class="n">kmp_affinity</span><span class="p">)</span>
+
+        <span class="c1"># Run the command</span>
+        <span class="n">fname</span> <span class="o">=</span> <span class="n">run_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">fname</span>
+
+<span class="c1">#================================================================================</span>
+<span class="k">def</span> <span class="nf">run_on_phi</span><span class="p">(</span><span class="n">omp_threads</span><span class="p">,</span> <span class="n">kmp_affinity</span><span class="p">):</span>
+
+        <span class="c1"># Build the command</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;ssh &#39;</span><span class="o">+</span><span class="n">host</span><span class="o">+</span><span class="s1">&#39;-mic0 &quot;source</span>
+<span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">mhenryde</span><span class="o">/</span><span class="n">source_to_phi</span><span class="o">.</span><span class="n">sh</span><span class="p">;</span> \
+                <span class="n">export</span> <span class="n">OMP_NUM_THREADS</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span><span class="o">.</span><span class="mi">0</span><span class="n">f</span><span class="p">};</span> \
+                <span class="n">export</span> <span class="n">KMP_AFFINITY</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">:</span><span class="n">s</span><span class="p">};</span> \
+<span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">mhenryde</span><span class="o">/</span><span class="n">STREAM</span><span class="o">/</span><span class="n">phi</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">omp</span><span class="o">.</span><span class="mi">80</span><span class="n">M</span><span class="o">.</span><span class="mi">20</span><span class="n">x</span><span class="o">.</span><span class="n">icc</span><span class="p">;</span><span class="s2">&quot;&#39;.format(omp_threads,kmp_affinity)</span>
+
+        <span class="c1"># Run the command</span>
+        <span class="n">fname</span> <span class="o">=</span> <span class="n">run_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">fname</span>
+
+
+<span class="c1">#================================================================================</span>
+<span class="k">def</span> <span class="nf">run_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="p">):</span>
+        <span class="n">fname</span> <span class="o">=</span> <span class="s1">&#39;out&#39;</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+
+        <span class="n">proc</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">f</span><span class="p">,</span><span class="n">stderr</span><span class="o">=</span><span class="n">sp</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+<span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">universal_newlines</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">out</span><span class="p">,</span><span class="n">err</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+        <span class="n">errcode</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">returncode</span>
+
+        <span class="k">if</span> <span class="n">errcode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Failed to run the executable&#39;</span><span class="p">)</span>
+                <span class="k">print</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">fname</span>
+
+
+<span class="c1">#================================================================================</span>
+<span class="k">def</span> <span class="nf">parse_outfile</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="s1">&#39;Copy&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                                <span class="n">copy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
+                        <span class="k">elif</span> <span class="s1">&#39;Scale&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                                <span class="n">scale</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
+                        <span class="k">elif</span> <span class="s1">&#39;Add&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                                <span class="n">add</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
+                        <span class="k">elif</span> <span class="s1">&#39;Triad&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                                <span class="n">triad</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">add</span><span class="p">,</span> <span class="n">triad</span>
+</pre></div>
+
+<h1>Run on the Sandy bridge node</h1>
+<p>You can see a picture of the Sandy bridge
+node
+<a href="http://www.nas.nasa.gov/hecc/support/kb/sandy-bridge-processors_301.html">here</a> and
+more details on each
+processor <a href="http://ark.intel.com/products/64595">here</a>. L3 cache is
+20MB and shared by 8 cores. There are two threads per core. L2 cache
+for each core is 256KB. The max memory bandwidth according to Intel is
+51.2GB/s.</p>
+<p>You can learn more about the different affinity
+types
+<a href="https://software.intel.com/en-us/node/522691#AFFINITY_TYPES">here</a>.</p>
+<p>Run the different tests on the Sandy bridge node:</p>
+<div class="highlight"><pre><span></span><span class="n">omp_threads</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">32</span><span class="p">]</span>
+<span class="n">kmp_affinities</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="s1">&#39;compact&#39;</span><span class="p">,</span> <span class="s1">&#39;balanced&#39;</span><span class="p">,</span> <span class="s1">&#39;scatter&#39;</span><span class="p">]</span>
+
+<span class="c1"># Loop of the different affinities</span>
+<span class="k">for</span> <span class="n">kmp_affinity</span> <span class="ow">in</span> <span class="n">kmp_affinities</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">KMP_AFFINITY is set to&#39;</span><span class="p">,</span><span class="n">kmp_affinity</span><span class="p">)</span>
+
+        <span class="c1"># Initialize the data</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">rownames</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">omp_threads</span><span class="p">)))</span>
+
+        <span class="c1"># Loop over all the threads and get stream results</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">omp_thread</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">omp_threads</span><span class="p">):</span>
+                <span class="n">fname</span> <span class="o">=</span> <span class="n">run_on_xeon</span><span class="p">(</span><span class="n">omp_thread</span><span class="p">,</span><span class="n">kmp_affinity</span><span class="p">)</span>
+                <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">j</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="n">j</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span>
+<span class="n">parse_outfile</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">rownames</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">omp_threads</span><span class="p">])</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+<div class="highlight"><pre><span></span>KMP_AFFINITY is set to none
+             4        8       16       32
+Copy   25747.2  44067.9  41397.1  36703.6
+Scale  27988.6  47477.9  45276.1  45570.9
+Add    32537.4  51168.6  45811.2  45038.5
+Triad  34699.1  51587.8  46165.0  45142.5
+
+[4 rows x 4 columns]
+
+
+KMP_AFFINITY is set to compact
+             4        8       16       32
+Copy   15036.4  25514.7  25874.7  48378.5
+Scale  17273.0  29312.7  30141.8  60886.3
+Add    21028.0  29942.5  28753.8  58155.8
+Triad  21530.2  31191.7  27225.5  58465.3
+
+[4 rows x 4 columns]
+
+
+KMP_AFFINITY is set to balanced
+             4        8       16       32
+Copy   25982.0  39110.3  39463.6  39683.9
+Scale  28039.4  42169.0  42830.8  46992.9
+Add    32804.2  43075.3  43958.0  47137.5
+Triad  34727.8  43453.5  44310.2  46942.7
+
+[4 rows x 4 columns]
+
+
+KMP_AFFINITY is set to scatter
+             4        8       16       32
+Copy   27097.9  48067.9  56499.6  46351.9
+Scale  29237.7  52072.8  63350.6  58691.1
+Add    36292.2  57135.8  62163.7  56161.6
+Triad  37330.9  59783.4  62835.5  57134.6
+
+[4 rows x 4 columns]
+</pre></div>
+
+<h2>Conclusions</h2>
+<p>It is important to use many threads and set the affinity to <code>scatter</code>
+to get close to advertised bandwidth.</p>
+<h1>Run on the phi</h1>
+<p>Details on the Phi on Peregrine can be
+found
+<a href="http://ark.intel.com/products/75801/Intel-Xeon-Phi-Coprocessor-5120D-8GB-1_053-GHz-60-core">here</a>.</p>
+<p>Run the different tests on the Phi</p>
+<div class="highlight"><pre><span></span><span class="n">omp_threads</span> <span class="o">=</span> <span class="p">[</span><span class="mi">30</span><span class="p">,</span><span class="mi">60</span><span class="p">,</span><span class="mi">120</span><span class="p">,</span><span class="mi">240</span><span class="p">]</span>
+<span class="n">kmp_affinities</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="s1">&#39;compact&#39;</span><span class="p">,</span> <span class="s1">&#39;balanced&#39;</span><span class="p">,</span> <span class="s1">&#39;scatter&#39;</span><span class="p">]</span>
+
+<span class="c1"># Loop of the different affinities</span>
+<span class="k">for</span> <span class="n">kmp_affinity</span> <span class="ow">in</span> <span class="n">kmp_affinities</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">KMP_AFFINITY is set to&#39;</span><span class="p">,</span><span class="n">kmp_affinity</span><span class="p">)</span>
+
+        <span class="c1"># Initialize the data</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">rownames</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">omp_threads</span><span class="p">)))</span>
+
+        <span class="c1"># Loop over all the threads and get stream results</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">omp_thread</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">omp_threads</span><span class="p">):</span>
+                <span class="n">fname</span> <span class="o">=</span> <span class="n">run_on_phi</span><span class="p">(</span><span class="n">omp_thread</span><span class="p">,</span><span class="n">kmp_affinity</span><span class="p">)</span>
+                <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">j</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="n">j</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span>
+<span class="n">parse_outfile</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">rownames</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">omp_threads</span><span class="p">])</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+<div class="highlight"><pre><span></span>KMP_AFFINITY is set to none
+             30        60       120       240
+Copy   116713.6  147755.9  155696.0  137694.5
+Scale   74052.2  116268.7  134298.3  119570.4
+Add     85516.2  128635.0  141906.7  124440.8
+Triad   84872.7  129049.3  143948.7  125497.7
+
+[4 rows x 4 columns]
+
+
+KMP_AFFINITY is set to compact
+            30       60       120       240
+Copy   39550.2  70182.9  102785.8  157652.8
+Scale  42322.3  65429.8   99079.3  140380.4
+Add    40778.1  66027.1  102263.7  147543.4
+Triad  40958.3  66067.7  102323.5  148306.9
+
+[4 rows x 4 columns]
+
+
+KMP_AFFINITY is set to balanced
+             30        60       120       240
+Copy   101394.0  147500.1  157426.3  156476.5
+Scale   73703.5  115617.7  135007.5  139661.0
+Add     84832.5  129537.1  144263.3  147876.6
+Triad   84410.1  129049.3  142985.1  147613.7
+
+[4 rows x 4 columns]
+
+
+KMP_AFFINITY is set to scatter
+             30        60       120       240
+Copy   102113.3  146354.1  157287.9  157833.6
+Scale   73758.2  115660.1  135535.8  138995.7
+Add     84913.9  129111.4  143563.7  147139.0
+Triad   84303.2  128186.6  143561.2  148287.8
+
+[4 rows x 4 columns]
+</pre></div>
+
+<h2>Conclusions</h2>
+<p>Other than the <code>compact</code> mode, most of these runs achieve close to the advertised rate.</p>
+    <HR/>
+    <div class="footer">
+      <p>Published from <a href="notes.mdw">notes.mdw</a>
+    using <a href="http://mpastell.com/pweave">Pweave</a> 0.25
+    on 13-09-2016.<p></div>
+
+            </div>
+        </div>
+    </div>
+  </BODY>
+</HTML>

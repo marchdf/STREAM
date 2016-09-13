@@ -1,0 +1,184 @@
+% STREAM testing on Peregrine
+% Marc T. Henry de Frahan
+% 12th September 2016
+
+
+# Setup environment
+Assume you requested a Phi node which contains two Sandy bridge processors
+
+```{bash}
+qsub -I -l nodes=1 -l walltime=02:30:00 -q phi -A optima;
+cat /proc/cpuinfo;
+```
+
+And that you loaded the right modules
+
+```{bash}
+module purge;
+module load comp-intel/16.0.2 python/3.3.3;
+module unload epel;
+```
+
+And that you compiled the codes
+```{bash}
+make stream.icc
+make phi.stream.icc
+```
+
+It should be noted that all these tests were run with: Array size =
+80000000 (elements), Offset = 0 (elements), memory per array = 610.4
+MiB (= 0.6 GiB), total memory required = 1831.1 MiB (= 1.8 GiB).
+
+
+# Setup python code
+
+Import modules
+```{python}
+import sys
+import os
+import socket
+import subprocess as sp
+import numpy as np
+import pandas as pd
+```
+
+Set up some important parameters
+```{python}
+host = socket.gethostname()
+rownames = ['Copy', 'Scale', 'Add', 'Triad']
+``` 
+
+Define some functions
+```{python}
+#================================================================================
+def run_on_xeon(omp_threads, kmp_affinity):
+
+	# Build the command
+	cmd = 'export OMP_NUM_THREADS={0:.0f}; \
+		export KMP_AFFINITY={1:s}; \
+		./stream.omp.80M.20x.icc;'.format(omp_threads,kmp_affinity)
+
+	# Run the command
+	fname =	run_cmd(cmd)
+
+	return fname
+
+
+#================================================================================
+def run_on_phi(omp_threads, kmp_affinity):
+
+	# Build the command
+	cmd = 'ssh '+host+'-mic0 "source /home/mhenryde/source_to_phi.sh; \
+		export OMP_NUM_THREADS={0:.0f}; \
+		export KMP_AFFINITY={1:s}; \
+		/home/mhenryde/STREAM/phi.stream.omp.80M.20x.icc;"'.format(omp_threads,kmp_affinity)
+
+	# Run the command
+	fname =	run_cmd(cmd)
+
+	return fname
+
+
+#================================================================================
+def run_cmd(cmd):
+	fname = 'out'	
+	f = open(fname, "w")
+
+	proc = sp.Popen(cmd, stdout=f,stderr=sp.PIPE, shell=True,universal_newlines=True)
+	out,err = proc.communicate()
+	errcode = proc.returncode
+
+	if errcode != 0:
+		print('Failed to run the executable')
+		print(err)
+		sys.exit()
+		
+	return fname
+
+	
+#================================================================================
+def parse_outfile(fname):
+	with open(fname) as f:
+		for line in f:
+			if 'Copy' in line:
+				copy = float(line.split()[1])
+			elif 'Scale' in line:
+   				scale = float(line.split()[1])
+			elif 'Add' in line:
+				add = float(line.split()[1])
+			elif 'Triad' in line:
+				triad = float(line.split()[1])
+	return copy, scale, add, triad
+``` 
+
+
+# Run on the Sandy bridge node
+
+You can see a picture of the Sandy bridge
+node
+[here](http://www.nas.nasa.gov/hecc/support/kb/sandy-bridge-processors_301.html) and
+more details on each
+processor [here](http://ark.intel.com/products/64595). L3 cache is
+20MB and shared by 8 cores. There are two threads per core. L2 cache
+for each core is 256KB. The max memory bandwidth according to Intel is
+51.2GB/s.
+
+You can learn more about the different affinity
+types
+[here](https://software.intel.com/en-us/node/522691#AFFINITY_TYPES).
+
+
+Run the different tests on the Sandy bridge node:
+```{python}
+omp_threads = [4,8,16,32]
+kmp_affinities = ['none', 'compact', 'balanced', 'scatter']
+
+# Loop of the different affinities
+for kmp_affinity in kmp_affinities:
+	print('\n\nKMP_AFFINITY is set to',kmp_affinity)
+	
+	# Initialize the data
+	data = np.zeros((len(rownames),len(omp_threads)))
+	
+	# Loop over all the threads and get stream results
+	for j, omp_thread in enumerate(omp_threads):
+		fname = run_on_xeon(omp_thread,kmp_affinity)
+		data[0,j], data[1,j], data[2,j], data[3,j] = parse_outfile(fname)
+
+	df = pd.DataFrame(data, index = rownames, columns = [str(o) for o in omp_threads])
+	print(df)
+```
+
+## Conclusions
+It is important to use many threads and set the affinity to `scatter`
+to get close to advertised bandwidth.
+
+# Run on the phi
+
+Details on the Phi on Peregrine can be
+found
+[here](http://ark.intel.com/products/75801/Intel-Xeon-Phi-Coprocessor-5120D-8GB-1_053-GHz-60-core).
+
+Run the different tests on the Phi
+```{python}
+omp_threads = [30,60,120,240]
+kmp_affinities = ['none', 'compact', 'balanced', 'scatter']
+
+# Loop of the different affinities
+for kmp_affinity in kmp_affinities:
+	print('\n\nKMP_AFFINITY is set to',kmp_affinity)
+	
+	# Initialize the data
+	data = np.zeros((len(rownames),len(omp_threads)))
+	
+	# Loop over all the threads and get stream results
+	for j, omp_thread in enumerate(omp_threads):
+		fname = run_on_phi(omp_thread,kmp_affinity)
+		data[0,j], data[1,j], data[2,j], data[3,j] = parse_outfile(fname)
+
+	df = pd.DataFrame(data, index = rownames, columns = [str(o) for o in omp_threads])
+	print(df)
+```
+
+## Conclusions
+Other than the `compact` mode, most of these runs achieve close to the advertised rate.
