@@ -1,5 +1,22 @@
 ===============================================
 
+This is a fork of the STREAM benchmark as posted by Jeff Hammond on
+Github.
+
+The major differences are the added Kokkos implementation in
+`stream.cpp` and the relevant modifications to the Makefile to make it
+work. Also added make commands for the Xeon Phi Knights Corner.
+
+Please read my detailed notes how to compile/run on Peregrine as well
+as some test results.
+
+
+===============================================
+
+
+
+===============================================
+
 STREAM is the de facto industry standard benchmark
 for measuring sustained memory bandwidth.
 
