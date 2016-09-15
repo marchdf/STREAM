@@ -4,31 +4,13 @@
 
 
 # Setup environment
-Assume you requested a Phi node which contains two Sandy bridge processors
+We will assume you requested a Phi node which contains two Sandy bridge processors
 
 ```{bash}
 qsub -I -l nodes=1 -l walltime=02:30:00 -q phi -A optima;
 cat /proc/cpuinfo;
+module purge; module load comp-intel/16.0.2; module unload epel; module load python/3.3.3;
 ```
-
-And that you loaded the right modules
-
-```{bash}
-module purge;
-module load comp-intel/16.0.2 python/3.3.3;
-module unload epel;
-```
-
-And that you compiled the codes
-```{bash}
-make stream.icc
-make phi.stream.icc
-```
-
-It should be noted that all these tests were run with: Array size =
-80000000 (elements), Offset = 0 (elements), memory per array = 610.4
-MiB (= 0.6 GiB), total memory required = 1831.1 MiB (= 1.8 GiB).
-
 
 # Setup python code
 
@@ -36,28 +18,41 @@ Import modules
 ```{python}
 import sys
 import os
+import shutil
 import socket
 import subprocess as sp
 import numpy as np
+import matplotlib as mpl
+#mpl.use('Agg')
+import matplotlib.pyplot as plt
 import pandas as pd
+import seaborn as sns
 ```
 
 Set up some important parameters
 ```{python}
 host = socket.gethostname()
-rownames = ['Copy', 'Scale', 'Add', 'Triad']
-``` 
+opnames = ['copy', 'scale', 'add', 'triad']
+
+# plot stuff
+plt.rc('text', usetex=False)
+plt.rc('font', family='serif', serif='Times')
+cmap_med =['#F15A60','#7AC36A','#5A9BD4','#FAA75B','#9E67AB','#CE7058','#D77FB4','#737373']
+cmap =['#EE2E2F','#008C48','#185AA9','#F47D23','#662C91','#A21D21','#B43894','#010202']
+dashseq = [(None,None),[10,5],[10, 4, 3, 4],[3, 3],[10, 4, 3, 4, 3, 4],[3, 3],[3, 3]];
+markertype = ['s','d','o','p','h','^','v']
+```
 
 Define some functions
 ```{python}
 #================================================================================
-def run_on_xeon(omp_threads, kmp_affinity):
+def run_on_xeon(exename, omp_threads, kmp_affinity='none'):
 
-	# Build the command
+        # Build the command
 	cmd = 'export OMP_NUM_THREADS={0:.0f}; \
-		export KMP_AFFINITY={1:s}; \
-		./stream.omp.80M.20x.icc;'.format(omp_threads,kmp_affinity)
-
+	export KMP_AFFINITY={1:s}; \
+	./'+exename+';'.format(omp_threads,kmp_affinity)
+        
 	# Run the command
 	fname =	run_cmd(cmd)
 
@@ -65,13 +60,13 @@ def run_on_xeon(omp_threads, kmp_affinity):
 
 
 #================================================================================
-def run_on_phi(omp_threads, kmp_affinity):
+def run_on_phi(exename, omp_threads, kmp_affinity='none'):
 
 	# Build the command
 	cmd = 'ssh '+host+'-mic0 "source /home/mhenryde/source_to_phi.sh; \
-		export OMP_NUM_THREADS={0:.0f}; \
-		export KMP_AFFINITY={1:s}; \
-		/home/mhenryde/STREAM/phi.stream.omp.80M.20x.icc;"'.format(omp_threads,kmp_affinity)
+        export OMP_NUM_THREADS={0:.0f}; \
+	export KMP_AFFINITY={1:s}; \
+	/home/mhenryde/STREAM/'+exename+';"'.format(omp_threads,kmp_affinity)
 
 	# Run the command
 	fname =	run_cmd(cmd)
@@ -81,7 +76,7 @@ def run_on_phi(omp_threads, kmp_affinity):
 
 #================================================================================
 def run_cmd(cmd):
-	fname = 'out'	
+	fname = 'out'
 	f = open(fname, "w")
 
 	proc = sp.Popen(cmd, stdout=f,stderr=sp.PIPE, shell=True,universal_newlines=True)
@@ -109,10 +104,56 @@ def parse_outfile(fname):
 			elif 'Triad' in line:
 				triad = float(line.split()[1])
 	return copy, scale, add, triad
-``` 
+```
 
 
-# Run on the Sandy bridge node
+
+Compile all the versions of the codes that we will use
+
+```{python}
+ld_modules = 'module purge; module load comp-intel/16.0.2; module unload epel;'
+run_cmd('make clean;')
+
+# Compile the original C version of stream with icc
+cmd = ld_modules+' make original.stream.icc.exe'
+run_cmd(cmd)
+
+# Compile with omp and icc
+cmd = ld_modules+' make stream.omp.icc.exe'
+run_cmd(cmd)
+
+# Compile with kokkos and icc
+cmd = ld_modules+' make COMPILE_KOKKOS=TRUE stream.kokkos.icc.exe'
+run_cmd(cmd)
+```
+
+It should be noted that all these tests were run with: Array size =
+80000000 (elements), Offset = 0 (elements), memory per array = 610.4
+MiB (= 0.6 GiB), total memory required = 1831.1 MiB (= 1.8 GiB).
+
+
+# Compare original stream with minimally modified STREAM
+
+We want to make sure that I didn't change the performance of stream by
+making it a `cpp` file and adding some `ifdefs`. We expect nothing to
+be different.
+
+```{python}
+# Run the original code
+fname = run_on_xeon('original.stream.icc.exe',32)
+copy1,scale1,add1,triad1 = parse_outfile(fname)
+
+# Run the minimally modified code
+fname = run_on_xeon('stream.omp.icc.exe',32)
+copy2,scale2,add2,triad2 = parse_outfile(fname)
+
+# Compare
+print('For copy, scale, add, triad:')
+print('original STREAM: {0:7.2f}, {1:7.2f}, {2:7.2f}, {3:7.2f}'.format(copy1,scale1,add1,triad1))
+print('modified STREAM: {0:7.2f}, {1:7.2f}, {2:7.2f}, {3:7.2f}'.format(copy2,scale2,add2,triad2))
+```
+
+# Effect of OMP_NUM_THREADS and KMP_AFFINITY on Sandy Bridge node
 
 You can see a picture of the Sandy bridge
 node
@@ -129,56 +170,126 @@ types
 
 
 Run the different tests on the Sandy bridge node:
-```{python}
+```{python, width = 900}
+df = pd.DataFrame(columns=['affinity','omp.threads','operation','bandwidth'])
 omp_threads = [4,8,16,32]
 kmp_affinities = ['none', 'compact', 'balanced', 'scatter']
 
 # Loop of the different affinities
 for kmp_affinity in kmp_affinities:
-	print('\n\nKMP_AFFINITY is set to',kmp_affinity)
-	
-	# Initialize the data
-	data = np.zeros((len(rownames),len(omp_threads)))
-	
+	#print('\n\nKMP_AFFINITY is set to',kmp_affinity)
 	# Loop over all the threads and get stream results
 	for j, omp_thread in enumerate(omp_threads):
-		fname = run_on_xeon(omp_thread,kmp_affinity)
-		data[0,j], data[1,j], data[2,j], data[3,j] = parse_outfile(fname)
+                #fname = run_on_xeon('stream.omp.icc.exe', omp_thread, kmp_affinity)
+                fname = run_on_xeon('stream.kokkos.icc.exe', omp_thread, kmp_affinity)
+                res = parse_outfile(fname)
+                for k,op in enumerate(opnames):
+                        df = df.append({'affinity': kmp_affinity,
+                                        'omp.threads': omp_thread,
+                                        'operation': op,
+                                        'bandwidth': res[k]},
+                                       ignore_index=True)
 
-	df = pd.DataFrame(data, index = rownames, columns = [str(o) for o in omp_threads])
-	print(df)
+# make the plot
+with sns.axes_style('white'):
+        g = sns.FacetGrid(df,
+                          col='operation',
+                          hue='affinity',
+                          palette = cmap,
+                          #size = 20,
+                          hue_kws=dict(marker=markertype[0:4]),
+                          legend_out= True)
+        g = (g.map(plt.scatter, 'omp.threads', 'bandwidth')
+             .map(plt.plot, 'omp.threads', 'bandwidth')
+             .add_legend())
+        
+plt.savefig('snb.png',format='png')
+plt.show()
 ```
 
 ## Conclusions
 It is important to use many threads and set the affinity to `scatter`
 to get close to advertised bandwidth.
 
-# Run on the phi
+# Effect of OMP_NUM_THREADS and KMP_AFFINITY on Phi
 
 Details on the Phi on Peregrine can be
 found
 [here](http://ark.intel.com/products/75801/Intel-Xeon-Phi-Coprocessor-5120D-8GB-1_053-GHz-60-core).
 
-Run the different tests on the Phi
+Recompile for the phi
+
 ```{python}
+ld_modules = 'module purge; module load comp-intel/16.0.2; module unload epel;'
+run_cmd('make clean;')
+
+# Compile with omp and icc
+cmd = ld_modules+' make ARCH=KNC stream.omp.icc.exe'
+run_cmd(cmd)
+
+# Compile with kokkos and icc
+cmd = ld_modules+' make COMPILE_KOKKOS=TRUE ARCH=KNC stream.kokkos.icc.exe'
+run_cmd(cmd)
+```
+
+Run the different tests on the Phi
+```{python, width = 900}
+df = pd.DataFrame(columns=['affinity','omp.threads','operation','bandwidth'])
 omp_threads = [30,60,120,240]
 kmp_affinities = ['none', 'compact', 'balanced', 'scatter']
 
 # Loop of the different affinities
 for kmp_affinity in kmp_affinities:
-	print('\n\nKMP_AFFINITY is set to',kmp_affinity)
-	
-	# Initialize the data
-	data = np.zeros((len(rownames),len(omp_threads)))
+	#print('\n\nKMP_AFFINITY is set to',kmp_affinity)
 	
 	# Loop over all the threads and get stream results
-	for j, omp_thread in enumerate(omp_threads):
-		fname = run_on_phi(omp_thread,kmp_affinity)
-		data[0,j], data[1,j], data[2,j], data[3,j] = parse_outfile(fname)
+        for j, omp_thread in enumerate(omp_threads):
+                #fname = run_on_phi('stream.omp.icc.exe', omp_thread, kmp_affinity)
+                fname = run_on_phi('stream.kokkos.icc.exe', omp_thread, kmp_affinity)
+                res = parse_outfile(fname)
+                for k,op in enumerate(opnames):
+                        df = df.append({'affinity': kmp_affinity,
+                                        'omp.threads': omp_thread,
+                                        'operation': op,
+                                        'bandwidth': res[k]},
+                                       ignore_index=True)
 
-	df = pd.DataFrame(data, index = rownames, columns = [str(o) for o in omp_threads])
-	print(df)
+# make the plot
+with sns.axes_style('white'):
+        g = sns.FacetGrid(df,
+                          col='operation',
+                          hue='affinity',
+                          palette = cmap,
+                          #size = 4,
+                          hue_kws=dict(marker=markertype[0:4]),
+                          legend_out= True)
+        g = (g.map(plt.scatter, 'omp.threads', 'bandwidth')
+             .map(plt.plot, 'omp.threads', 'bandwidth')
+             .add_legend())
+        
+plt.savefig('phi.png',format='png')
+plt.show()
 ```
 
 ## Conclusions
 Other than the `compact` mode, most of these runs achieve close to the advertised rate.
+
+
+# Compare OpenMP and Kokkos STREAM
+
+Let's now see how a minimal Kokkos implementation compares with OpenMP.
+
+```{python}
+# Run the minimally modified code
+fname = run_on_phi('stream.omp.icc.exe',120,'scatter')
+copy1,scale1,add1,triad1 = parse_outfile(fname)
+
+# Run the minimally modified Kokkos code
+fname = run_on_phi('stream.kokkos.icc.exe',120,'scatter')
+copy2,scale2,add2,triad2 = parse_outfile(fname)
+
+# Compare
+print('For copy, scale, add, triad:')
+print('OpenMP STREAM: {0:7.2f}, {1:7.2f}, {2:7.2f}, {3:7.2f}'.format(copy1,scale1,add1,triad1))
+print('Kokkos STREAM: {0:7.2f}, {1:7.2f}, {2:7.2f}, {3:7.2f}'.format(copy2,scale2,add2,triad2))
+```

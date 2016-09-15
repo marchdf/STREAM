@@ -14,7 +14,9 @@ FFLAGS = -O2 -fopenmp
 # Problem definitions
 #
 #================================================================================
-PROB_DEFS = -DSTREAM_ARRAY_SIZE=80000000 -DNTIMES=20
+PROB_DEFS = -DSTREAM_ARRAY_SIZE=80000000 -DNTIMES=100
+#PROB_DEFS = -DSTREAM_ARRAY_SIZE=80000000 -DNTIMES=1
+#PROB_DEFS = -DSTREAM_ARRAY_SIZE=800 -DNTIMES=1
 
 #================================================================================
 #
@@ -82,12 +84,12 @@ original.stream.icc.exe: stream.c
 	icc -O3 -fopenmp $(PROB_DEFS) $(ARCHFLAGS) stream.c -o original.stream.icc.exe
 
 # Compile minimally changed STREAM
-stream.icc.exe: stream.cpp
-	icc -O3 -fopenmp $(PROB_DEFS) $(ARCHFLAGS) stream.c -o stream.icc.exe
+stream.omp.icc.exe: stream.cpp
+	icc -O3 -fopenmp $(PROB_DEFS) $(ARCHFLAGS) stream.c -o stream.omp.icc.exe
 
 # Compile for the Kokkos version of STREAM
-stream.kokkos.icc: $(OBJ) $(KOKKOS_LINK_DEPENDS)
-	$(LINK) $(KOKKOS_LDFLAGS) $(LINKFLAGS) $(EXTRA_PATH) $(OBJ) $(KOKKOS_LIBS) $(LIB) $(PROB_DEFS) -o stream.kokkos.exe
+stream.kokkos.icc.exe: $(OBJ) $(KOKKOS_LINK_DEPENDS)
+	$(LINK) $(KOKKOS_LDFLAGS) $(LINKFLAGS) $(EXTRA_PATH) $(OBJ) $(KOKKOS_LIBS) $(LIB) $(PROB_DEFS) -o stream.kokkos.icc.exe
 
 # Kokkos compilation rules
 %.o:%.cpp $(KOKKOS_CPP_DEPENDS)
