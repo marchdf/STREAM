@@ -198,7 +198,7 @@ with sns.axes_style('white'):
                           palette = cmap,
                           #size = 20,
                           hue_kws=dict(marker=markertype[0:4]),
-                          legend_out= True)
+                          legend_out= False)
         g = (g.map(plt.scatter, 'omp.threads', 'bandwidth')
              .map(plt.plot, 'omp.threads', 'bandwidth')
              .add_legend())
@@ -208,8 +208,14 @@ plt.show()
 ```
 
 ## Conclusions
-It is important to use many threads and set the affinity to `scatter`
-to get close to advertised bandwidth.
+
+- The thread affinity influences the bandwidth. 
+- Different thread affinities are best at different thread numbers. 
+- `balanced` mode performs well at higher thread counts.
+- We achieve close to the advertised bandwidth though the fact that
+  one thread is busy with this python notebook might induce some
+  slowdown.
+
 
 # Effect of OMP_NUM_THREADS and KMP_AFFINITY on Phi
 
@@ -262,7 +268,7 @@ with sns.axes_style('white'):
                           palette = cmap,
                           #size = 4,
                           hue_kws=dict(marker=markertype[0:4]),
-                          legend_out= True)
+                          legend_out= False)
         g = (g.map(plt.scatter, 'omp.threads', 'bandwidth')
              .map(plt.plot, 'omp.threads', 'bandwidth')
              .add_legend())
@@ -272,12 +278,23 @@ plt.show()
 ```
 
 ## Conclusions
-Other than the `compact` mode, most of these runs achieve close to the advertised rate.
+
+- Most tests achieve half the advertised bandwidth (352GB/s according
+  to
+  [this](http://ark.intel.com/products/75801/Intel-Xeon-Phi-Coprocessor-5120D-8GB-1_053-GHz-60-core)). This
+  does not depend on the OMP/Kokkos implementation.
+- There is not much variation induced by the thread affinity,
+  especially for `add` and `triad`.
+- Though `scatter` seems to perform well throughout.
+- At the maximal thread count there is very little difference between
+  the affinities.
+
 
 
 # Compare OpenMP and Kokkos STREAM
 
-Let's now see how a minimal Kokkos implementation compares with OpenMP.
+The minimal Kokkos implementation achieves almost identical bandwidth
+as the pure OpenMP implementation.
 
 ```{python}
 # Run the minimally modified code
@@ -293,3 +310,4 @@ print('For copy, scale, add, triad:')
 print('OpenMP STREAM: {0:7.2f}, {1:7.2f}, {2:7.2f}, {3:7.2f}'.format(copy1,scale1,add1,triad1))
 print('Kokkos STREAM: {0:7.2f}, {1:7.2f}, {2:7.2f}, {3:7.2f}'.format(copy2,scale2,add2,triad2))
 ```
+
